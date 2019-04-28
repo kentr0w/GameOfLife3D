@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.BorderPane?>
+
+<BorderPane fx:id="borderPane" prefHeight="753.0" prefWidth="778.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
+         <center>
+            <Canvas fx:id="Canvas" height="700.0" width="700.0" BorderPane.alignment="CENTER" />
+         </center>
+         <top>
+            <Button fx:id="Button" mnemonicParsing="false" onMouseClicked="#MouseClick" text="Button" BorderPane.alignment="CENTER" />
+         </top>
+         <left>
+            <Label fx:id="Label" text="Label" BorderPane.alignment="CENTER" />
+         </left>
+      </BorderPane>

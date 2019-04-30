@@ -8,19 +8,31 @@ import javafx.application.Application;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.*;
+import javafx.geometry.Insets;
 import javafx.scene.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.ToolBar;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.shape.Cylinder;
+import javafx.scene.shape.DrawMode;
 import javafx.scene.shape.Sphere;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,6 +40,8 @@ import java.util.List;
 public class Main extends Application {
 
 
+
+    static double WIDTH, HEIGHT;
     private Scene scene;
     PerspectiveCamera camera;
     private Rotate rotateX = new Rotate(0, Rotate.X_AXIS);
@@ -37,13 +51,19 @@ public class Main extends Application {
     int a = 70;
     int b = -40;
     int c = -100;
-    private Group root;
-    int count = 5;
+    private Group root, root1;
+    int count = 13;
+    public SubScene subScene;
+    public Scene sceneResult;
 
     private List<Box> boxes = new ArrayList<>();
 
-    public Parent createContent() throws Exception {
-        // Box
+    public SubScene createContent() throws Exception {
+
+        VBox strings = new VBox();
+        Button but = new Button("gfhbr");
+        strings.getChildren().add(but);
+
 
         camera = new PerspectiveCamera(true);
         camera.setFarClip(2000); // чтобы не пропадали объекты
@@ -54,16 +74,16 @@ public class Main extends Application {
                 new Rotate(0, Rotate.Z_AXIS),
                 new Translate(0, 0, c)); // приближает и отдаляет камеру
 
-
-
-        // Build the Scene Graph
         root = new Group();
+        root1 = new Group();
         root.getChildren().add(camera);
+
+        root1.getChildren().add(strings);
 
         double x,y,z;
         int step=5;
         y=z=0;
-        x = 5;
+        x =step;
         PhongMaterial phongMaterial = new PhongMaterial();
         phongMaterial.setDiffuseColor(Color.GREEN);
 
@@ -149,18 +169,22 @@ public class Main extends Application {
         root.getChildren().addAll(xAxis, yAxis, zAxis);
 
         // Use a SubScene
-        SubScene subScene = new SubScene(root, 600, 600, true,
+        subScene = new SubScene(root, WIDTH/2-100, HEIGHT/2 +100, true,
                 SceneAntialiasing.BALANCED);
-        subScene.setFill(Color.TRANSPARENT);
+        subScene.setFill(Color.PINK);
         subScene.setCamera(camera);
 
-        return new Group(subScene);
+        root1.getChildren().add(root);
+
+
+        return subScene;
+        //return new Group(subScene);
     }
 
 
     private double mousePosX, mousePosY = 0;
     private void handleMouseEvents(Stage primaryStage) {
-        scene.setOnMousePressed((MouseEvent me) -> {
+        subScene.setOnMousePressed((MouseEvent me) -> {
             mousePosX = me.getSceneX();
             mousePosY = me.getSceneY();
         });
@@ -182,35 +206,12 @@ public class Main extends Application {
                     new Rotate(0, Rotate.Z_AXIS),
                     new Translate(0, 0, c));
 
-            /*if(a>0) {
-                for (Box ob : boxes) {
-                    ob.translateZProperty().set(ob.getTranslateZ() + 10);
-                    ob.translateXProperty().set(ob.getTranslateX() + 10);
-                    ob.translateYProperty().set(ob.getTranslateY() + 10);
-                }
-            }
-            else{
-                for (Box ob : boxes) {
-                    ob.translateZProperty().set(ob.getTranslateZ() - 10);
-                    ob.translateXProperty().set(ob.getTranslateX() - 10);
-                    ob.translateYProperty().set(ob.getTranslateY() - 10);
-                }
-            }*/
             System.out.println(c);
 
-            /*if(camera.getTransforms().get(0).getMxx() > 0.5)
-                camera.translateXProperty().set(camera.getTranslateX() + a);
-            if(camera.getTransforms().get(0).getMyy() > 0.5)
-                camera.translateYProperty().set(camera.getTranslateY() + a);
-            if(camera.getTransforms().get(0).getMzz() > 0.5)
-                camera.translateZProperty().set(camera.getTranslateZ() + a);*/
-            //camera.translateZProperty().set(camera.getTranslateZ() + a); //крутая фишка
-           // camera.translateXProperty().set(camera.getTranslateX() + a);
-            //camera.translateYProperty().set(camera.getTranslateY() + a);
 
         });
 
-        scene.setOnMouseDragged((MouseEvent me) -> {
+        subScene.setOnMouseDragged((MouseEvent me) -> {
 
             double dx = (mousePosX - me.getSceneX()) ;
             double dy = (mousePosY - me.getSceneY());
@@ -237,26 +238,85 @@ public class Main extends Application {
         });
     }
 
+
+
+    @Override
+    public void init(){
+        System.out.println("Initialize");
+    }
+
+
     @Override
     public void start(Stage primaryStage) throws Exception {
-        //Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
-        // set title for the stage
-        primaryStage.setTitle("creating box");
+
+
+        WIDTH = Screen.getPrimary().getBounds().getWidth();
+        HEIGHT = Screen.getPrimary().getBounds().getHeight();
+
+        SubScene scene = (createContent());
+        BorderPane pane = new BorderPane();
+        pane.setCenter(scene);
+        TextArea textArea = new TextArea();
+
+        pane.setStyle("-fx-background-color: #008080;");
+
+        textArea.setPrefHeight(10);
+        textArea.setPrefWidth(100);
+
+        Button select = new Button("Reset");
+        select.setOnAction(e->{
+            System.out.println(sceneResult.getHeight());
+        });
+
+        Button zoom_plus = new Button("Zoom +");
+        zoom_plus.setOnAction(e->{
+
+        });
+        zoom_plus.setPrefSize(75,25);
+
+        Button zoom_min = new Button("Zoom -");
+        zoom_min.setOnAction(e->{
+
+        });
+        zoom_min.setPrefSize(75,25);
+
+        AnchorPane.setTopAnchor(textArea, 100.0);
+        AnchorPane.setRightAnchor(textArea, WIDTH/13);
+
+        AnchorPane.setTopAnchor(select, 160.0);
+        AnchorPane.setRightAnchor(select, 120.0);
+
+        AnchorPane.setTopAnchor(zoom_plus, 480.0);
+        AnchorPane.setRightAnchor(zoom_plus, 108.0);
+
+        AnchorPane.setTopAnchor(zoom_min, 480.0);
+        AnchorPane.setRightAnchor(zoom_min, 30.0);
 
 
 
+        AnchorPane anchorPane = new AnchorPane(textArea, select,zoom_plus,zoom_min);
 
+        anchorPane.setPrefSize(170,150);
+
+        pane.setRight(anchorPane);
+        pane.setPrefSize(700,700);
+
+        sceneResult = new Scene(pane);
+
+
+
+        primaryStage.setTitle("3D");
         primaryStage.setResizable(false);
-        scene = new Scene(createContent());
         handleMouseEvents(primaryStage);
-        primaryStage.setScene(scene);
+        primaryStage.setScene(sceneResult);
 
-        //Scene scene = new Scene(group, 500, 300);
+        System.out.println(sceneResult.getFill().toString());
 
-        //scene.setCamera(perspectivecamera);
-
-        // primaryStage.setScene(scene);
-
+        Rectangle2D screenBounds = Screen.getPrimary().getBounds();
+        System.out.println(screenBounds);
+        primaryStage.setResizable(true);
+        primaryStage.setMinHeight(HEIGHT/2+100);
+        primaryStage.setMinWidth(WIDTH/2);
         primaryStage.show();
 
     }

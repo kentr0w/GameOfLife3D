@@ -1,5 +1,11 @@
 package sample;
 
+import Constatnce.Constance;
+import Corps.Corps;
+import Factory.Factory;
+import Service.Controller;
+import Service.MainScene;
+import Service.MinorScene;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -42,26 +48,13 @@ import java.util.List;
 public class Main extends Application {
 
 
-
     static double  WIDTH, HEIGHT;
     private Scene scene;
-    PerspectiveCamera camera;
-    private Rotate rotateX = new Rotate(0, Rotate.X_AXIS);
-    private Rotate rotateY = new Rotate(0, Rotate.Y_AXIS);
-    private Rotate rotateZ = new Rotate(0, Rotate.Z_AXIS);
-    private final double TURN_FACTOR = 0.5;
-    int a = 70;
-    int b = -40;
-    int c = -100;
-    private Group root, root1;
     int count = 4;
-    public SubScene subScene;
     public Scene sceneResult;
     PhongMaterial phongMaterial;
 
-    private List<Box> boxes = new ArrayList<>();
-
-    public SubScene createContent() throws Exception {
+/*    public SubScene createContent() throws Exception {
 
         VBox strings = new VBox();
         Button but = new Button("gfhbr");
@@ -69,13 +62,13 @@ public class Main extends Application {
 
 
         camera = new PerspectiveCamera(true);
-        camera.setFarClip(2000); // чтобы не пропадали объекты
+        camera.setFarClip(1000); // чтобы не пропадали объекты
         camera.setNearClip(1);
         camera.getTransforms().addAll(
                 new Rotate(a, Rotate.Y_AXIS),
                 new Rotate(b, Rotate.X_AXIS),
                 new Rotate(0, Rotate.Z_AXIS),
-                new Translate(0, 0, c)); // приближает и отдаляет камеру
+                new Translate(0, 0,c)); // приближает и отдаляет камеру
 
         root = new Group();
         root1 = new Group();
@@ -111,33 +104,21 @@ public class Main extends Application {
                         y = step / 1.9;
                         k_y = 0;
                     }
-            }
-            if(i!=0 && i%(count*count)==0){
-                if (y > 0)
-                    y = -y;
-                else {
-                    y = -y;
-                    y += step;
-                    ++k_y;
-                }
-                if (k_y + 1 > count / 2) {
-                    y = step / 1.9;
-                    k_y = 0;
-                }
 
-                if(z>0)
-                    z=-z;
-                else {
-                    z=-z;
-                    z += step;
-                    ++k_z;
-                }
-                if (k_z + 1 > count / 2) {
-                    z = step / 1.9;
-                    k_z = 0;
-                }
+                    if(i%(count*count)==0){
+                        if(z>0)
+                            z=-z;
+                        else {
+                            z=-z;
+                            z += step;
+                            ++k_z;
+                        }
+                        if (k_z + 1 > count / 2) {
+                            z = step / 1.9;
+                            k_z = 0;
+                        }
+                    }
             }
-
             obj.setTranslateX(x);
             obj.setTranslateY(y);
             obj.setTranslateZ(z);
@@ -188,7 +169,6 @@ public class Main extends Application {
 
         root1.getChildren().add(root);
 
-
         return subScene;
         //return new Group(subScene);
     }
@@ -201,7 +181,7 @@ public class Main extends Application {
             mousePosY = me.getSceneY();
         });
 
-        primaryStage.addEventHandler(ScrollEvent.SCROLL, event -> {
+        subScene.addEventHandler(ScrollEvent.SCROLL, event -> {
 
 
             camera.getTransforms().clear();
@@ -219,7 +199,6 @@ public class Main extends Application {
                     new Translate(0, 0, c));
 
             System.out.println(c);
-
 
         });
 
@@ -248,8 +227,7 @@ public class Main extends Application {
             mousePosX = me.getSceneX();
             mousePosY = me.getSceneY();
         });
-    }
-
+    }*/
 
 
     @Override
@@ -267,13 +245,8 @@ public class Main extends Application {
 
 
 
-        BorderPane pane = new BorderPane();
 
-        SubScene subscene = (createContent());
-        pane.setLeft(subscene);
-
-
-        TextArea textArea = new TextArea();
+        /*TextArea textArea = new TextArea();
         textArea.setPrefHeight(10);
         textArea.setPrefWidth(100);
 
@@ -323,27 +296,33 @@ public class Main extends Application {
 
 
 
-
         AnchorPane anchorPane = new AnchorPane(textArea, select, zoom_min, zoom_plus, color, view);
         anchorPane.setStyle("-fx-background-color: #008080;");
         anchorPane.setPrefSize((WIDTH/4),HEIGHT);
 
-        AnchorPane.setTopAnchor(textArea, HEIGHT - 350);
+        //AnchorPane.setTopAnchor(textArea, HEIGHT - 350);
+        AnchorPane.setTopAnchor(textArea, HEIGHT - HEIGHT/1.2);
+
         AnchorPane.setRightAnchor(textArea, 45.0);
 
-        AnchorPane.setTopAnchor(select, HEIGHT-300);
+       // AnchorPane.setTopAnchor(select, HEIGHT-300);
+        AnchorPane.setTopAnchor(select, HEIGHT-HEIGHT/1.4);
         AnchorPane.setRightAnchor(select, 68.0);
 
-        AnchorPane.setTopAnchor(color, HEIGHT-220);
+        //AnchorPane.setTopAnchor(color, HEIGHT-220);
+        AnchorPane.setTopAnchor(color, HEIGHT-HEIGHT/2);
         AnchorPane.setRightAnchor(color, 68.0);
 
-        AnchorPane.setTopAnchor(view, HEIGHT - 170);
+        //AnchorPane.setTopAnchor(view, HEIGHT - 170);
+        AnchorPane.setTopAnchor(view, HEIGHT - HEIGHT/2.9);
         AnchorPane.setRightAnchor(view, 48.0);
 
-        AnchorPane.setTopAnchor(zoom_plus, HEIGHT - zoom_plus.getPrefHeight()-20);
+        //AnchorPane.setTopAnchor(zoom_plus, HEIGHT - zoom_plus.getPrefHeight()-20);
+        AnchorPane.setTopAnchor(zoom_plus, HEIGHT - HEIGHT/5.8);
         AnchorPane.setRightAnchor(zoom_plus, 100.0);
 
-        AnchorPane.setTopAnchor(zoom_min, HEIGHT-zoom_min.getPrefHeight()-20);
+        //AnchorPane.setTopAnchor(zoom_min, HEIGHT-zoom_min.getPrefHeight()-20);
+        AnchorPane.setTopAnchor(zoom_min,HEIGHT - HEIGHT/5.8);
         AnchorPane.setRightAnchor(zoom_min, 15.0);
 
 
@@ -353,6 +332,8 @@ public class Main extends Application {
 
         sceneResult = new Scene(pane);
 
+
+
         sceneResult.widthProperty().addListener(new ChangeListener<Number>() {
             int b =0;
             @Override
@@ -360,7 +341,7 @@ public class Main extends Application {
                 int a = newValue.intValue();
                 if(b!=0) {
                     WIDTH+=(a-b);
-                    subscene.setWidth(subscene.getWidth() + (a-b));
+                   // subScene.setWidth(subScene.getWidth() + (a-b));
                 }
                 b = a;
             }
@@ -372,20 +353,51 @@ public class Main extends Application {
                 int c = newValue.intValue();
                 if(d!=0) {
                     HEIGHT+=(c-d);
-                    subscene.setHeight(subscene.getHeight() + (c - d));
-                    for(Node obj : anchorPane.getChildren()){
-                        AnchorPane.setTopAnchor(obj, AnchorPane.getTopAnchor(obj) + (c-d)/2.5);
-                    }
+                   // subScene.setHeight(subScene.getHeight() + (c - d));
+
+                    AnchorPane.setTopAnchor(textArea, HEIGHT - HEIGHT/1.2);
+                    AnchorPane.setTopAnchor(select, HEIGHT-HEIGHT/1.4);
+                    AnchorPane.setTopAnchor(color, HEIGHT-HEIGHT/2);
+                    AnchorPane.setTopAnchor(view, HEIGHT - HEIGHT/2.9);
+                    AnchorPane.setTopAnchor(zoom_plus, HEIGHT - HEIGHT/5.8);
+                    AnchorPane.setTopAnchor(zoom_min,HEIGHT - HEIGHT/5.8);
+
                     anchorPane.setPrefHeight(anchorPane.getHeight() + (c-d));
                 }
                 d=c;
             }
-        });
+        });*/
+
+        int size = 4;
+        count =6;
+
+
+
+        Factory factory = new Factory();
+        factory.setCount(count);
+
+        Corps corps = factory.getCorps(size);
+        ArrayList<Box> boxes = corps.getBoxes();
+
+        factory.setBoxes(boxes);
+
+        Controller controller = new Controller(factory, size);
+
+
+        MainScene mainScene = factory.GetMain();
+        //Scene qwerty = mainScene.GetScene();
+
+        Scene qwerty = controller.build();
+
+
+
+
+
+
 
         primaryStage.setTitle("3D");
         primaryStage.setResizable(false);
-        handleMouseEvents(primaryStage);
-        primaryStage.setScene(sceneResult);
+        primaryStage.setScene(qwerty);
 
         Rectangle2D screenBounds = Screen.getPrimary().getBounds();
         System.out.println(screenBounds);
@@ -402,63 +414,3 @@ public class Main extends Application {
     }
 }
 
-/*
-for(int i=0; i<count*count; ++i){
-        Box obj = new Box(4,4,4);
-        obj.setOnMousePressed((MouseEvent e)->{
-        if(obj.getMaterial() == (null))
-        obj.setMaterial(phongMaterial);
-        else{
-        }
-        });
-        if(i==1) {
-        root.getChildren().add(obj);
-        boxes.add(obj);
-        continue;
-        }
-
-        if(i!=0 && i%count==0){
-        if(y>0)
-        y=-y;
-        else {
-        y=-y;
-        y += step;
-        }
-        if(y/step>count/2)
-        y=0;
-        }
-        if(i!=0 && i%(count*count)==0){
-        if(y>0)
-        y=-y;
-        else {
-        y=-y;
-        y += step;
-        }
-        if(y/step>count/2)
-        y=0;
-
-        if(z>0)
-        z=-z;
-        else {
-        z=-z;
-        z += step;
-        }
-        if(z/step>count/2)
-        z=0;
-        }
-
-        obj.setTranslateX(x);
-        obj.setTranslateY(y);
-        obj.setTranslateZ(z);
-        boxes.add(obj);
-        root.getChildren().add(obj);
-        if(x>0)
-        x=-x;
-        else {
-        x=-x;
-        x += step;
-        }
-        if(x/step>count/2)
-        x=0;
-        }
-        */

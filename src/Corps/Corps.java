@@ -1,5 +1,6 @@
 package Corps;
 
+import Constatnce.Constance;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
@@ -7,17 +8,17 @@ import javafx.scene.shape.Box;
 import java.util.ArrayList;
 
 public class Corps {
-    private static int size, count;
+    private static int count;
     private static ArrayList<Box> boxes;
-    private  PhongMaterial phongMaterial;
+    private static PhongMaterial phongMaterial;
 
     {
         phongMaterial = new PhongMaterial();
         phongMaterial.setDiffuseColor(Color.GREEN);
     }
 
-    public Corps(int size, int count){
-        Corps.size = size;
+    public Corps(int count){
+
         Corps.count = count;
         boxes = new ArrayList<>();
     }
@@ -27,7 +28,7 @@ public class Corps {
     }
     private void Generation(){
         for(int i=0; i<count*count*count; ++i){
-            Box box = new Box(size,size, size);
+            Box box = new Box(Constance.SIZE,Constance.SIZE, Constance.SIZE);
             box.setOnMousePressed(event -> {
                 if(box.getMaterial()==null)
                     box.setMaterial(phongMaterial);
@@ -48,6 +49,14 @@ public class Corps {
         Corps.count = count;
         boxes.clear();
         Generation();
+    }
+    public void SetColor(Color color){
+        phongMaterial.setDiffuseColor(color);
+        Generation();
+        for(Box obj: boxes){
+            if(obj.getMaterial()!=null)
+                obj.setMaterial(phongMaterial);
+        }
     }
 }
 

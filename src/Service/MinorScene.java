@@ -12,7 +12,7 @@ import javafx.scene.transform.Translate;
 import java.util.ArrayList;
 
 public class MinorScene {
-    private SubScene subScene;
+    private static SubScene subScene;
     private Group root;
     private Camera camera;
     private ArrayList<Box> boxes;
@@ -250,5 +250,9 @@ public class MinorScene {
     public void setBoxes(ArrayList<Box> boxes, int count){
         this.boxes = boxes;
         this.count = count;
+    }
+
+    public void SetColor(Color color){
+        subScene.setFill(color);
     }
 }

@@ -66,6 +66,5 @@ public class MainScene {
 
     public void SetSubscene(SubScene subScene){
         this.pane.setLeft(subScene);
-        InitializeScene();
     }
 }

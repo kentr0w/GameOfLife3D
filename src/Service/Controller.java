@@ -1,5 +1,6 @@
 package Service;
 
+import ColorPackage.ColorScene;
 import Constatnce.Constance;
 import Corps.Corps;
 import Factory.Factory;
@@ -8,6 +9,7 @@ import javafx.scene.SubScene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextArea;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Box;
 
 import java.awt.*;
@@ -24,11 +26,11 @@ public class Controller {
     private CheckBox checkBox;
     private ArrayList<Box> boxes;
 
-    public Controller(Factory factory, int size){
+    public Controller(Factory factory){
         mainScene = factory.GetMain();
         minorScene = factory.GetMinor();
         addition = factory.GetAddition();
-        corps = factory.getCorps(size);
+        corps = factory.getCorps();
         this.textArea = addition.getTextArea();
         this.select = addition.getButtons()[0];
         this.color = addition.getButtons()[1];
@@ -64,6 +66,17 @@ public class Controller {
             minorScene.ZoomMinus();
         });
         color.setOnAction(event -> {
+            ColorScene colorScene = new ColorScene();
+            Color color = colorScene.getColor();
+            String str = colorScene.getName();
+            System.out.println(color.toString());
+
+            if(str=="фон1")
+                minorScene.SetColor(color);
+            if(str=="фон2")
+                addition.setColor(ColorScene.toRGBCode(color));
+            if(str=="фон3")
+                corps.SetColor(color);
 
         });
         checkBox.setOnAction(event -> {

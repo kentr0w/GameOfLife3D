@@ -48,9 +48,9 @@ public class Factory {
             addition = new Addition();
         return addition;
     }
-    public Corps getCorps(int size){
+    public Corps getCorps(){
         if(corps == null)
-            corps = new Corps(size, count);
+            corps = new Corps(count);
         return corps;
     }
 }

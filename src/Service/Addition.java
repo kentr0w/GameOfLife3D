@@ -6,6 +6,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Color;
 
 public class Addition {
     private TextArea textArea;
@@ -80,6 +81,12 @@ public class Addition {
         AnchorPane.setTopAnchor(zoom_minus,Constance.TOPZOOMM());
     }
     AnchorPane GetAnchor(){
+
         return anchorPane;
+    }
+
+    public void setColor(String str){
+        anchorPane.setStyle("-fx-background-color: " + str + ";");
+
     }
 }

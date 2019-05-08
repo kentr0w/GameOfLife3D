@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.SubScene;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Box;
+import Corps.Container;
 
 import java.util.ArrayList;
 
@@ -16,7 +17,7 @@ public class Factory {
     private static MinorScene minorScene;
     private static MainScene mainScene;
     private static Addition addition;
-    private static ArrayList<Box> boxes;
+    private static ArrayList<Container> boxes;
     private Corps corps;
     private int count;
 
@@ -26,7 +27,7 @@ public class Factory {
     public void setCount(int count){
         this.count = count;
     }
-    public void setBoxes(ArrayList<Box> boxes){
+    public void setBoxes(ArrayList<Container> boxes){
         Factory.boxes = boxes;
     }
 
@@ -50,7 +51,7 @@ public class Factory {
     }
     public Corps getCorps(){
         if(corps == null)
-            corps = new Corps(count);
+            corps = new Corps();
         return corps;
     }
 }

@@ -1,6 +1,7 @@
 package Service;
 
 import Constatnce.Constance;
+import Corps.Container;
 import javafx.scene.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
@@ -15,9 +16,8 @@ public class MinorScene {
     private static SubScene subScene;
     private Group root;
     private Camera camera;
-    private ArrayList<Box> boxes;
+    private ArrayList<Container> boxes;
     private double mousePosX, mousePosY;
-    private int count;
 
     {
         root = new Group();
@@ -32,9 +32,8 @@ public class MinorScene {
         root.getChildren().add(camera);
     }
 
-    public MinorScene(ArrayList<Box> boxes, int count){
+    public MinorScene(ArrayList<Container> boxes, int count){
         this.boxes = boxes;
-        this.count = count;
     }
 
     private void CreatContentEven(){
@@ -42,32 +41,32 @@ public class MinorScene {
         root.getChildren().add(camera);
         double x,y,z;
         int k_x=0, k_y=0, k_z=0;
-        x=y=z=Constance.KEVEN;
+        x=y=z=Constance.getKEVEN();
 
         for(int i=0; i<boxes.size(); ++i){
-            Box obj = boxes.get(i);
-            if(i!=0 && i%count==0){
+            Container obj = boxes.get(i);
+            if(i!=0 && i%Constance.getCOUNT()==0){
                 if (y > 0)
                     y = -y;
                 else {
                     y = -y;
-                    y += Constance.STEP;
+                    y += Constance.getSTEP();
                     ++k_y;
                 }
-                if (k_y + 1 > count / 2) {
-                    y = Constance.KEVEN;
+                if (k_y + 1 > Constance.getCOUNT() / 2) {
+                    y = Constance.getKEVEN();
                     k_y = 0;
                 }
-                if(i%(count*count)==0){
+                if(i%(Constance.getCOUNT()*Constance.getCOUNT())==0){
                     if(z>0)
                         z=-z;
                     else {
                         z=-z;
-                        z += Constance.STEP;
+                        z += Constance.getSTEP();
                         ++k_z;
                     }
-                    if (k_z + 1 > count / 2) {
-                        z =Constance.KEVEN;
+                    if (k_z + 1 > Constance.getCOUNT() / 2) {
+                        z =Constance.getKEVEN();
                         k_z = 0;
                     }
                 }
@@ -75,16 +74,19 @@ public class MinorScene {
             obj.setTranslateX(x);
             obj.setTranslateY(y);
             obj.setTranslateZ(z);
+            obj.setX(x);
+            obj.setY(y);
+            obj.setZ(z);
             root.getChildren().add(obj);
             if(x>0)
                 x=-x;
             else {
                 x=-x;
-                x += Constance.STEP;
+                x += Constance.getSTEP();
                 ++k_x;
             }
-            if(k_x+1>count/2) {
-                x = Constance.KEVEN;
+            if(k_x+1>Constance.getCOUNT()/2) {
+                x = Constance.getKEVEN();
                 k_x=0;
             }
         }
@@ -96,39 +98,42 @@ public class MinorScene {
         root.getChildren().add(camera);
         double x=0,y=0,z=0;
         for(int i=0; i<boxes.size(); ++i){
-            Box obj = boxes.get(i);
+            Container obj = boxes.get(i);
 
-            if(i!=0 && i%count==0){
+            if(i!=0 && i%Constance.getCOUNT()==0){
                 if(y>0)
                     y=-y;
                 else {
                     y=-y;
-                    y += Constance.STEP;
+                    y += Constance.getSTEP();
                 }
-                if(y/Constance.STEP>count/2)
+                if(y/Constance.getSTEP()>Constance.getCOUNT()/2)
                     y=0;
-                if(i%(count*count)==0){
+                if(i%(Constance.getCOUNT()*Constance.getCOUNT())==0){
                     if(z>0)
                         z=-z;
                     else {
                         z=-z;
-                        z += Constance.STEP;
+                        z += Constance.getSTEP();
                     }
-                    if(z/Constance.STEP>count/2)
+                    if(z/Constance.getSTEP()>Constance.getCOUNT()/2)
                         z=0;
                 }
             }
             obj.setTranslateX(x);
             obj.setTranslateY(y);
             obj.setTranslateZ(z);
+            obj.setX(x);
+            obj.setY(y);
+            obj.setZ(z);
             root.getChildren().add(obj);
             if(x>0)
                 x=-x;
             else {
                 x=-x;
-                x += Constance.STEP;
+                x += Constance.getSTEP();
             }
-            if(x/Constance.STEP>count/2)
+            if(x/Constance.getSTEP()>Constance.getCOUNT()/2)
                 x=0;
         }
 
@@ -247,9 +252,8 @@ public class MinorScene {
     public void ZoomMinus(){
         Scrol(-1);
     }
-    public void setBoxes(ArrayList<Box> boxes, int count){
+    public void setBoxes(ArrayList<Container> boxes){
         this.boxes = boxes;
-        this.count = count;
     }
 
     public void SetColor(Color color){

@@ -2,6 +2,7 @@ package sample;
 
 import Constatnce.Constance;
 import Corps.Corps;
+import Corps.Container;
 import Factory.Factory;
 import Service.Controller;
 import Service.MainScene;
@@ -69,7 +70,7 @@ public class Main extends Application {
         factory.setCount(count);
 
         Corps corps = factory.getCorps();
-        ArrayList<Box> boxes = corps.getBoxes();
+        ArrayList<Container> boxes = corps.getBoxes();
 
         factory.setBoxes(boxes);
 

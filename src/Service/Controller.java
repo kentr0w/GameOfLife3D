@@ -3,17 +3,16 @@ package Service;
 import ColorPackage.ColorScene;
 import Constatnce.Constance;
 import Corps.Corps;
+import Corps.Square;
 import Factory.Factory;
+import Logic.Logic;
 import javafx.scene.Scene;
-import javafx.scene.SubScene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Box;
-
-import java.awt.*;
-import java.awt.image.AreaAveragingScaleFilter;
+import Corps.Container;
 import java.util.ArrayList;
 
 public class Controller {
@@ -22,9 +21,10 @@ public class Controller {
     private Addition addition;
     private Corps corps;
     private TextArea textArea;
-    private Button select, color, zoom_plus, zoom_minus;
+    private Button select, color, zoom_plus, zoom_minus, run;
     private CheckBox checkBox;
-    private ArrayList<Box> boxes;
+    private ArrayList<Container> boxes;
+    private int a;
 
     public Controller(Factory factory){
         mainScene = factory.GetMain();
@@ -36,6 +36,7 @@ public class Controller {
         this.color = addition.getButtons()[1];
         this.zoom_plus = addition.getButtons()[2];
         this.zoom_minus = addition.getButtons()[3];
+        this.run = addition.getButtons()[4];
         this.checkBox = addition.getCheckBox();
         InitializeEvent();
     }
@@ -45,17 +46,24 @@ public class Controller {
         return mainScene.GetScene();
     }
 
-    private void Refactor(int count){
-        corps.setCount(count);
-        minorScene.setBoxes(corps.getBoxes(), count);
+    private void Refactor(){
+        corps.setCount();
+        minorScene.setBoxes(corps.getBoxes());
     }
 
     private void InitializeEvent(){
         select.setOnAction(event -> {
-            int a = Integer.parseInt((textArea.getText()));
-            Refactor(a);
-            mainScene.SetSubscene(minorScene.GetSubScene());
-            System.out.println("Event");
+            try{
+                a = Integer.parseInt((textArea.getText()));
+                Constance.SETCOUNT(a);
+                Constance.setStep((int)addition.getSlidet());
+                Refactor();
+                mainScene.SetSubscene(minorScene.GetSubScene());
+                System.out.println(addition.getSlidet());
+            }
+            catch (Exception ex){
+
+            }
         });
 
         zoom_plus.setOnAction(e->{
@@ -69,7 +77,6 @@ public class Controller {
             ColorScene colorScene = new ColorScene();
             Color color = colorScene.getColor();
             String str = colorScene.getName();
-            System.out.println(color.toString());
 
             if(str=="фон1")
                 minorScene.SetColor(color);
@@ -77,17 +84,14 @@ public class Controller {
                 addition.setColor(ColorScene.toRGBCode(color));
             if(str=="фон3")
                 corps.SetColor(color);
-
         });
         checkBox.setOnAction(event -> {
             boxes = corps.getBoxes();
             if(checkBox.isSelected()) {
                 for (Box obj : corps.getBoxes()) {
                     obj.setOnMousePressed(event1 -> {
-                        System.out.println("hi");
                     });
                 }
-                System.out.println("dont work");
             }
             else{
                 for (Box obj : boxes) {
@@ -98,9 +102,15 @@ public class Controller {
                             obj.setMaterial(null);
                     });
                 }
-                System.out.println(" work");
 
             }
+        });
+
+        run.setOnAction(event -> {
+            Logic logic = new Logic(a,corps.getBoxes());
+            ArrayList<Square[][]> arrayList = logic.getArray();
+            logic.Run(corps.getChoses());
+            corps.Clean();
         });
     }
 }

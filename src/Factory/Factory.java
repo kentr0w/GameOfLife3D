@@ -1,6 +1,7 @@
 package Factory;
 
 import Corps.Corps;
+import Logic.Logic;
 import Service.Addition;
 import Service.MainScene;
 import Service.MinorScene;
@@ -18,6 +19,7 @@ public class Factory {
     private static MainScene mainScene;
     private static Addition addition;
     private static ArrayList<Container> boxes;
+    private static Logic logic;
     private Corps corps;
     private int count;
 
@@ -33,7 +35,7 @@ public class Factory {
 
     public MinorScene GetMinor(){
         if(minorScene == null)
-            minorScene = new MinorScene(Factory.boxes, count);
+            minorScene = new MinorScene(Factory.boxes);
         return minorScene;
     }
 
@@ -53,5 +55,11 @@ public class Factory {
         if(corps == null)
             corps = new Corps();
         return corps;
+    }
+
+    public Logic getLogic(){
+        if(logic == null)
+            logic = new Logic(corps.getBoxes());
+        return logic;
     }
 }

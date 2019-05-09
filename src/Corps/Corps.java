@@ -1,21 +1,14 @@
 package Corps;
 
 import Constatnce.Constance;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 
 import java.util.ArrayList;
 
 public class Corps {
     private static ArrayList<Container> boxes;
-    private static PhongMaterial phongMaterial;
     private static ArrayList<Container> choses;
 
-    {
-        phongMaterial = new PhongMaterial();
-        phongMaterial.setDiffuseColor(Color.GREEN);
-    }
 
     public Corps(){
         boxes = new ArrayList<>(Constance.getCOUNT()*Constance.getCOUNT()*Constance.getCOUNT());
@@ -27,7 +20,7 @@ public class Corps {
             Container box = new Container(Constance.SIZE,Constance.SIZE, Constance.SIZE);
             box.setOnMousePressed(event -> {
                 if(box.getMaterial()==null) {
-                    box.setMaterial(phongMaterial);
+                    box.setMaterial(Constance.getPhongMaterial());
                     choses.add(box);
                 }
                 else {
@@ -41,7 +34,7 @@ public class Corps {
     }
 
     public void setMaterial(Box box){
-        box.setMaterial(phongMaterial);
+        box.setMaterial(Constance.getPhongMaterial());
     }
     public ArrayList<Container> getBoxes(){
         return boxes;
@@ -50,12 +43,11 @@ public class Corps {
         boxes.clear();
         Generation();
     }
-    public void SetColor(Color color){
-        phongMaterial.setDiffuseColor(color);
+    public void SetColor(){
         Generation();
         for(Box obj: boxes){
             if(obj.getMaterial()!=null) {
-                obj.setMaterial(phongMaterial);
+                obj.setMaterial(Constance.getPhongMaterial());
             }
         }
     }

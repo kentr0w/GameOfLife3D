@@ -1,6 +1,7 @@
 package ColorPackage;
 
 
+import Constatnce.Constance;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -52,6 +53,17 @@ public class ColorScene {
 
         button.setOnMousePressed(event1 -> {
             color = colorPicker.getValue();
+            switch (string) {
+                case "фон1":
+                    Constance.setPhongMaterialMain(color);
+                    break;
+                case "фон2":
+                    Constance.setPhongMaterialMinor(color);
+                    break;
+                case "фон3":
+                    Constance.setPhongMaterial(color);
+                    break;
+            }
             this.scene.getWindow().hide();
         });
 

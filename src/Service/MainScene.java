@@ -4,6 +4,8 @@ import Constatnce.Constance;
 import Factory.Factory;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.ObservableList;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.SubScene;
 import javafx.scene.layout.BorderPane;
@@ -13,10 +15,10 @@ import java.util.ArrayList;
 
 public class MainScene {
 
-    private Scene result;
-    private BorderPane pane;
-    private MinorScene minorScene;
-    private Addition addition;
+    private static Scene result;
+    private static BorderPane pane;
+    private static MinorScene minorScene;
+    private static Addition addition;
 
     public MainScene(){
     }
@@ -67,4 +69,5 @@ public class MainScene {
     public void SetSubscene(SubScene subScene){
         this.pane.setLeft(subScene);
     }
+
 }

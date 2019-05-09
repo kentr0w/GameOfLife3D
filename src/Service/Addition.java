@@ -1,7 +1,6 @@
 package Service;
 
 import Constatnce.Constance;
-import com.sun.tools.classfile.ConstantPool;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Slider;
@@ -47,7 +46,7 @@ public class Addition {
     }
 
     public Button[] getButtons(){
-        return new Button[]{build, color, zoom_plus, zoom_minus, run};
+        return new Button[]{build, color, zoom_plus, zoom_minus, run, reset};
     }
 
     public TextArea getTextArea(){

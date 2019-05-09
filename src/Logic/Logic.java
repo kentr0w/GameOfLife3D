@@ -3,6 +3,8 @@ package Logic;
 import Constatnce.Constance;
 import Corps.Container;
 import Corps.Square;
+import Service.MainScene;
+import javafx.application.Platform;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 
@@ -12,25 +14,26 @@ import java.util.concurrent.locks.Condition;
 
 public class Logic {
 
-    private int count;
     private ArrayList<Container> boxes;
-    private ArrayList<Square[][]> array;
+    private ArrayList<Square[][]> array = new ArrayList<>(Constance.getCOUNT());
 
-    public Logic(int count, ArrayList<Container> boxes){
-        this.count = count;
+    private ArrayList<Integer> xAxic = new ArrayList<>();
+    private ArrayList<Integer> yAxic = new ArrayList<>();
+    private ArrayList<Integer> zAxic = new ArrayList<>();
+
+    private ArrayList<Integer> notxAxic = new ArrayList<>();
+    private ArrayList<Integer> notyAxic = new ArrayList<>();
+    private ArrayList<Integer> notzAxic = new ArrayList<>();
+
+    public Logic(ArrayList<Container> boxes){
         this.boxes = boxes;
-        array = new ArrayList<>(count);
         Initialize();
         qwerty();
     }
 
-    public ArrayList<Square[][]> getArray(){
-        return array;
-    }
-
     private void Initialize(){
-        for(int k=0; k<count; ++k) {
-            Square[][] matrix = new Square[count][count];
+        for(int k=0; k<Constance.getCOUNT(); ++k) {
+            Square[][] matrix = new Square[Constance.getCOUNT()][Constance.getCOUNT()];
             array.add(matrix);
         }
     }
@@ -91,15 +94,13 @@ public class Logic {
         for(int i=0; i<boxes.size(); ++i) {
             Container obj = boxes.get(i);
             if(boxes.size()%2!=0){
-                z = getz_odd(obj);// Math.abs((int)(obj.getZ()/Constance.getSTEP()) + ((Constance.getCOUNT()/2))) ;
-                x = getx_odd(obj);//Math.abs((int)(obj.getX()/Constance.getSTEP())  - (int)(Constance.getCOUNT()/2));//Math.abs(((int) (obj.getX()) / Constance.getSTEP()) - (int) (Constance.getCOUNT() / 2) + 1);
-                y = gety_odd(obj);//)Math.abs((int)(obj.getY()/Constance.getSTEP())  - (int)(Constance.getCOUNT()/2));//Math.abs(((int) (obj.getY()) / Constance.getSTEP()) - (int) (Constance.getCOUNT() / 2) + 1);
+                z = getz_odd(obj);
+                x = getx_odd(obj);
+                y = gety_odd(obj);
         }
         else{
             z = getz_even(obj);
-
             x = getx_even(obj);
-
             y = gety_even(obj);
 
         }
@@ -109,61 +110,107 @@ public class Logic {
         }
     }
 
-    public void AddToMatrix(Square box){
+    private int rty=0;
 
+
+    public void rr(ArrayList<Container> choses){
+        Thread thread = new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+                Runnable updater = new Runnable() {
+
+                    @Override
+                    public void run() {
+                        Run(choses);
+                        rty++;
+                        System.out.println(rty);
+                    }
+                };
+
+                while (rty<5) {
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException ex) {
+                    }
+
+                    Platform.runLater(updater);
+                }
+            }
+        });
+        try {
+            thread.join();
+        }catch (InterruptedException ex){
+        }
+        thread.start();
+
+        System.out.println("Hello");
+        thread.interrupt();
     }
-
     public void Run(ArrayList<Container> choses){
-        PhongMaterial material = new PhongMaterial();
-        material.setDiffuseColor(Color.BLUE);
-        ArrayList<Integer> xAxic = new ArrayList<Integer>();
-        ArrayList<Integer> yAxic = new ArrayList<Integer>();
-        ArrayList<Integer> zAxic = new ArrayList<Integer>();
 
-        for(int i=0; i<choses.size(); ++i){
-            int x,y,z;
-            if(Constance.getCOUNT()%2!=0){
-                z = getz_odd(choses.get(i));
-                x =getx_odd(choses.get(i));
-                y = gety_odd(choses.get(i));
-            }
-            else{
-                z = getz_even(choses.get(i));
-                x = getx_even(choses.get(i));
-                y = gety_even(choses.get(i));
-            }
+            for (Container chose : choses) {
+                int x, y, z;
+                if (Constance.getCOUNT() % 2 != 0) {
+                    z = getz_odd(chose);
+                    x = getx_odd(chose);
+                    y = gety_odd(chose);
+                } else {
+                    z = getz_even(chose);
+                    x = getx_even(chose);
+                    y = gety_even(chose);
+                }
 
-            for(int q=-1; q<2; ++q){
-                for(int w=-1; w<2; ++w){
-                    for(int e=-1; e<2; ++e){
-                        if(q==0 && w==0 && e==0){
-                            if(isDie(z,x,y))
-                                array.get(z)[x][y].getBox().setMaterial(material);
-                            else
-                                array.get(z)[x][y].getBox().setMaterial(null);
+                for (int q = -1; q < 2; ++q) {
+                    for (int w = -1; w < 2; ++w) {
+                        for (int e = -1; e < 2; ++e) {
+                            if (q == 0 && w == 0 && e == 0) {
+                                if (isDie(z, x, y)) {
+                                    xAxic.add(x);
+                                    yAxic.add(y);
+                                    zAxic.add(z);
+                                }
+                                else{
+                                    notxAxic.add(x);
+                                    notyAxic.add(y);
+                                    notzAxic.add(z);
+                                }
+                            } else
+                                try {
+                                    Container qwr = array.get(z + q)[x + w][y + e].getBox();
+                                    if (extra(z + q, x + w, y + e)) {
+                                        xAxic.add(x + w);
+                                        yAxic.add(y + e);
+                                        zAxic.add(z + q);
+                                    }
+                                } catch (Exception ex) {
+
+                                }
                         }
-                        else
-                            try {
-                                Container qwr = array.get(z+q)[x+w][y+e].getBox();
-                                if (extra(z + q, x + w, y + e)) {
-                                    xAxic.add(x + w);
-                                    yAxic.add(y + e);
-                                    zAxic.add(z + q);
-                                 }
-                            }
-                            catch (Exception ex){
-                            }
-
                     }
                 }
             }
+            choses.clear();
+
+            draw(choses,  xAxic,  yAxic,  zAxic,  notxAxic,  notyAxic,  notzAxic);
+
+            xAxic.clear();
+            yAxic.clear();
+            zAxic.clear();
+
+            notxAxic.clear();
+            notyAxic.clear();
+            notzAxic.clear();
+    }
+
+    private void draw(ArrayList<Container> choses, ArrayList<Integer> xAxic, ArrayList<Integer> yAxic, ArrayList<Integer> zAxic, ArrayList<Integer> notxAxic, ArrayList<Integer> notyAxic, ArrayList<Integer> notzAxic){
+        for (int i = 0; i < xAxic.size(); ++i) {
+            array.get(zAxic.get(i))[xAxic.get(i)][yAxic.get(i)].getBox().setMaterial(Constance.getPhongMaterial());
+            if (!choses.contains(array.get(zAxic.get(i))[xAxic.get(i)][yAxic.get(i)].getBox()))
+                choses.add(array.get(zAxic.get(i))[xAxic.get(i)][yAxic.get(i)].getBox());
         }
-        for(int i=0; i<xAxic.size(); ++i){
-            array.get(zAxic.get(i))[xAxic.get(i)][yAxic.get(i)].getBox().setMaterial(material);
-        }
-        xAxic.clear();
-        yAxic.clear();
-        zAxic.clear();
+        for(int i=0; i<notxAxic.size(); ++i)
+            array.get(notzAxic.get(i))[notxAxic.get(i)][notyAxic.get(i)].getBox().setMaterial(null);
     }
 
     private boolean extra(int z, int x, int y) {
@@ -202,5 +249,14 @@ public class Logic {
             }
         }
         return count >= 5 && count <= 10;
+    }
+
+    public void Clean(){
+        xAxic.clear();
+        yAxic.clear();
+        zAxic.clear();
+        notxAxic.clear();
+        notyAxic.clear();
+        notzAxic.clear();
     }
 }

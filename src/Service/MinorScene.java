@@ -32,7 +32,7 @@ public class MinorScene {
         root.getChildren().add(camera);
     }
 
-    public MinorScene(ArrayList<Container> boxes, int count){
+    public MinorScene(ArrayList<Container> boxes){
         this.boxes = boxes;
     }
 
@@ -232,7 +232,7 @@ public class MinorScene {
                 SceneAntialiasing.BALANCED);
         else
             subScene.setRoot(root);
-        subScene.setFill(Color.PINK);
+        subScene.setFill(Constance.getPhongMaterialMinor().getDiffuseColor());
         subScene.setCamera(camera);
         handleMouseEvents();
         return subScene;
@@ -256,7 +256,9 @@ public class MinorScene {
         this.boxes = boxes;
     }
 
-    public void SetColor(Color color){
-        subScene.setFill(color);
+    public void SetColor(){
+        subScene.setFill(Constance.getPhongMaterialMinor().getDiffuseColor());
     }
+
+
 }

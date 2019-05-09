@@ -1,5 +1,7 @@
 package Constatnce;
 
+import javafx.scene.paint.Color;
+import javafx.scene.paint.PhongMaterial;
 import javafx.stage.Screen;
 import javafx.stage.Window;
 
@@ -13,6 +15,11 @@ public final class Constance {
     private static  int Z = -100;
     private static  int STEP = 5;
     private static int COUNT;
+    private static PhongMaterial phongMaterial = new PhongMaterial(Color.BLACK);
+    private static PhongMaterial phongMaterialMain = new PhongMaterial(Color.GREEN);
+    private static PhongMaterial phongMaterialMinor = new PhongMaterial(Color.PINK);
+
+
 
     public static void setWIDTH(double shift){
         WIDTH+=shift;
@@ -103,4 +110,24 @@ public final class Constance {
     public static int getCOUNT(){
         return COUNT;
     }
+
+    public static void setPhongMaterial(Color q){
+        phongMaterial.setDiffuseColor(q);
+    }
+    public static PhongMaterial getPhongMaterial(){
+        return phongMaterial;
+    }
+    public static void setPhongMaterialMinor(Color q){
+        phongMaterialMinor.setDiffuseColor(q);
+    }
+    public static PhongMaterial getPhongMaterialMinor(){
+        return phongMaterialMinor;
+    }
+    public static void setPhongMaterialMain(Color q){
+        phongMaterialMain.setDiffuseColor(q);
+    }
+    public static PhongMaterial getPhongMaterialMain(){
+        return phongMaterialMain;
+    }
+
 }

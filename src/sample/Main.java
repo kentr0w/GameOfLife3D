@@ -51,6 +51,10 @@ import java.util.List;
 public class Main extends Application {
 
 
+    //TODO
+    // Отсановка программы чтобы не портить узор!
+    // Генерация новых блоков
+
 
     @Override
     public void init(){
@@ -93,6 +97,7 @@ public class Main extends Application {
 
     public static void main(String[] args) {
         launch(args);
+
     }
 }
 

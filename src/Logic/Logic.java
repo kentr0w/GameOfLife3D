@@ -3,18 +3,16 @@ package Logic;
 import Constatnce.Constance;
 import Corps.Container;
 import Corps.Square;
-import Service.MainScene;
 import javafx.application.Platform;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.PhongMaterial;
-
 import java.util.ArrayList;
-import java.util.concurrent.locks.Condition;
 
 
 public class Logic {
 
+    private Thread thread;
     private ArrayList<Container> boxes;
+    private ArrayList<Container> choses;
+    private ArrayList<Container> choses1;
     private ArrayList<Square[][]> array = new ArrayList<>(Constance.getCOUNT());
 
     private ArrayList<Integer> xAxic = new ArrayList<>();
@@ -24,11 +22,31 @@ public class Logic {
     private ArrayList<Integer> notxAxic = new ArrayList<>();
     private ArrayList<Integer> notyAxic = new ArrayList<>();
     private ArrayList<Integer> notzAxic = new ArrayList<>();
+    private boolean finish = true;
 
-    public Logic(ArrayList<Container> boxes){
+
+    public Logic(){
+    }
+    public void setup(ArrayList<Container> boxes){
         this.boxes = boxes;
         Initialize();
         qwerty();
+
+        thread = new Thread(() -> {
+            Runnable updater = () -> Logic.this.Run(choses);
+            while (!isEnd() & finish) {
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException ex) {
+                }
+                Platform.runLater(updater);
+                try {
+                    Thread.sleep(50);
+                } catch (InterruptedException ex) {
+                }
+                AfterRun();
+            }
+        });
     }
 
     private void Initialize(){
@@ -110,44 +128,18 @@ public class Logic {
         }
     }
 
-    private int rty=0;
-
-
-    public void rr(ArrayList<Container> choses){
-        Thread thread = new Thread(new Runnable() {
-
-            @Override
-            public void run() {
-                Runnable updater = new Runnable() {
-
-                    @Override
-                    public void run() {
-                        Run(choses);
-                        rty++;
-                        System.out.println(rty);
-                    }
-                };
-
-                while (rty<5) {
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException ex) {
-                    }
-
-                    Platform.runLater(updater);
-                }
-            }
-        });
-        try {
-            thread.join();
-        }catch (InterruptedException ex){
-        }
-        thread.start();
-
-        System.out.println("Hello");
-        thread.interrupt();
+    public void setChoses(ArrayList<Container> choses){
+        this.choses = choses;
     }
-    public void Run(ArrayList<Container> choses){
+    public void rr(){
+        finish = true;
+        if(choses.isEmpty())
+            return;
+        thread.setDaemon(true);
+        thread.start();
+        System.out.println("1 = " + thread.isInterrupted());
+    }
+    private void Run(ArrayList<Container> choses){
 
             for (Container chose : choses) {
                 int x, y, z;
@@ -183,6 +175,11 @@ public class Logic {
                                         yAxic.add(y + e);
                                         zAxic.add(z + q);
                                     }
+                                    else{
+                                        notxAxic.add(x+w);
+                                        notyAxic.add(y+e);
+                                        notzAxic.add(z+q);
+                                    }
                                 } catch (Exception ex) {
 
                                 }
@@ -192,7 +189,13 @@ public class Logic {
             }
             choses.clear();
 
-            draw(choses,  xAxic,  yAxic,  zAxic,  notxAxic,  notyAxic,  notzAxic);
+        for (int i = 0; i < xAxic.size(); ++i) {
+            array.get(zAxic.get(i))[xAxic.get(i)][yAxic.get(i)].getBox().setMaterial(Constance.getPhongMaterial());
+            if (!choses.contains(array.get(zAxic.get(i))[xAxic.get(i)][yAxic.get(i)].getBox()))
+                choses.add(array.get(zAxic.get(i))[xAxic.get(i)][yAxic.get(i)].getBox());
+        }
+        for(int i=0; i<notxAxic.size(); ++i)
+            array.get(notzAxic.get(i))[notxAxic.get(i)][notyAxic.get(i)].getBox().setMaterial(null);
 
             xAxic.clear();
             yAxic.clear();
@@ -201,16 +204,6 @@ public class Logic {
             notxAxic.clear();
             notyAxic.clear();
             notzAxic.clear();
-    }
-
-    private void draw(ArrayList<Container> choses, ArrayList<Integer> xAxic, ArrayList<Integer> yAxic, ArrayList<Integer> zAxic, ArrayList<Integer> notxAxic, ArrayList<Integer> notyAxic, ArrayList<Integer> notzAxic){
-        for (int i = 0; i < xAxic.size(); ++i) {
-            array.get(zAxic.get(i))[xAxic.get(i)][yAxic.get(i)].getBox().setMaterial(Constance.getPhongMaterial());
-            if (!choses.contains(array.get(zAxic.get(i))[xAxic.get(i)][yAxic.get(i)].getBox()))
-                choses.add(array.get(zAxic.get(i))[xAxic.get(i)][yAxic.get(i)].getBox());
-        }
-        for(int i=0; i<notxAxic.size(); ++i)
-            array.get(notzAxic.get(i))[notxAxic.get(i)][notyAxic.get(i)].getBox().setMaterial(null);
     }
 
     private boolean extra(int z, int x, int y) {
@@ -226,10 +219,9 @@ public class Logic {
 
                     }
                 }
-
             }
         }
-        return count >= 6 && count <= 9;
+        return count >= Constance.getCREATEMIN() && count <= Constance.getCREATEMAX();
     }
 
     private boolean isDie(int z, int x, int y){
@@ -242,16 +234,55 @@ public class Logic {
                             ++count;
                         }
                     } catch (Exception ex) {
-
                     }
                 }
-
             }
         }
-        return count >= 5 && count <= 10;
+        return count >= Constance.getALIVEMIN() && count <= Constance.getALIVEMAX();
+    }
+
+    private void AfterRun(){
+        for(Container container: boxes){
+            container.setOnMousePressed(event -> {
+                if(container.getMaterial()==null) {
+                    container.setMaterial(Constance.getPhongMaterial());
+                    choses.add(container);
+
+                }
+                else {
+                    container.setMaterial(null);
+                    choses.remove(container);
+                }
+            });
+        }
+    }
+
+    private boolean isEnd(){
+        if(choses.isEmpty()) {
+            System.out.println("1");
+            return true;
+        }
+        if(choses1 == null) {
+            choses1 = (ArrayList<Container>) choses.clone();
+            return false;
+        }
+        if(choses1.size()!=choses.size())
+            return false;
+        else {
+            for(int i=0; i<choses.size(); ++i) {
+                if(choses.get(i)!=choses1.get(i)) {
+                    choses1 = (ArrayList<Container>)choses.clone();
+                    System.out.println("3");
+                    return false;
+                }
+            }
+            System.out.println("2");
+            return true;
+        }
     }
 
     public void Clean(){
+        finish = false;
         xAxic.clear();
         yAxic.clear();
         zAxic.clear();

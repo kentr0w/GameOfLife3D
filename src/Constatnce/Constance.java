@@ -18,6 +18,11 @@ public final class Constance {
     private static PhongMaterial phongMaterial = new PhongMaterial(Color.BLACK);
     private static PhongMaterial phongMaterialMain = new PhongMaterial(Color.GREEN);
     private static PhongMaterial phongMaterialMinor = new PhongMaterial(Color.PINK);
+    private static int ALIVEMIN = 5;
+    private static int ALIVEMAX = 8;
+    private static int CREATEMIN = 6;
+    private static int CREATEMAX = 9;
+
 
 
 
@@ -130,4 +135,35 @@ public final class Constance {
         return phongMaterialMain;
     }
 
+    public static int getALIVEMIN() {
+        return ALIVEMIN;
+    }
+
+    public static void setALIVEMIN(int ALIVEMIN) {
+        Constance.ALIVEMIN = ALIVEMIN;
+    }
+
+    public static int getALIVEMAX() {
+        return ALIVEMAX;
+    }
+
+    public static void setALIVEMAX(int ALIVEMAX) {
+        Constance.ALIVEMAX = ALIVEMAX;
+    }
+
+    public static int getCREATEMIN() {
+        return CREATEMIN;
+    }
+
+    public static void setCREATEMIN(int CREATEMIN) {
+        Constance.CREATEMIN = CREATEMIN;
+    }
+
+    public static int getCREATEMAX() {
+        return CREATEMAX;
+    }
+
+    public static void setCREATEMAX(int CREATEMAX) {
+        Constance.CREATEMAX = CREATEMAX;
+    }
 }

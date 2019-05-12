@@ -10,13 +10,9 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextArea;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import Corps.Container;
 import java.util.ArrayList;
-import java.util.Random;
 
 public class Controller {
     private MainScene mainScene;
@@ -114,18 +110,21 @@ public class Controller {
                             obj.setMaterial(null);
                     });
                 }
-
             }
         });
 
         run.setOnAction(event -> {
-            logic.rr(corps.getChoses());
-            System.out.println("Hello from controller");
+            corps.BeforRun();
+            logic.setup(corps.getBoxes());
+            logic.setChoses(corps.getChoses());
+            logic.rr();
         });
 
         reset.setOnAction(event -> {
             logic.Clean();
-            corps.Clean();
+            //corps.Clean();
+           // Refactor();
+           // mainScene.SetSubscene(minorScene.GetSubScene());
         });
 
     }

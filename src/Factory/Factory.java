@@ -59,7 +59,7 @@ public class Factory {
 
     public Logic getLogic(){
         if(logic == null)
-            logic = new Logic(corps.getBoxes());
+            logic = new Logic();
         return logic;
     }
 }

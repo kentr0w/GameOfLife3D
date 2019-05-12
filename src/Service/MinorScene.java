@@ -36,12 +36,13 @@ public class MinorScene {
         this.boxes = boxes;
     }
 
-    private void CreatContentEven(){
+    private void CreatContent(boolean iseven){
         root.getChildren().clear();
         root.getChildren().add(camera);
-        double x,y,z;
+        double x=0,y=0,z=0;
         int k_x=0, k_y=0, k_z=0;
-        x=y=z=Constance.getKEVEN();
+        if(iseven)
+            x=y=z=Constance.getKEVEN();
 
         for(int i=0; i<boxes.size(); ++i){
             Container obj = boxes.get(i);
@@ -53,10 +54,17 @@ public class MinorScene {
                     y += Constance.getSTEP();
                     ++k_y;
                 }
-                if (k_y + 1 > Constance.getCOUNT() / 2) {
-                    y = Constance.getKEVEN();
-                    k_y = 0;
+                if(iseven) {
+                    if (k_y + 1 > Constance.getCOUNT() / 2) {
+                        y = Constance.getKEVEN();
+                        k_y = 0;
+                    }
                 }
+                    else
+                    if(k_y>Constance.getCOUNT()/2) {
+                        y = 0;
+                        k_y=0;
+                    }
                 if(i%(Constance.getCOUNT()*Constance.getCOUNT())==0){
                     if(z>0)
                         z=-z;
@@ -65,10 +73,17 @@ public class MinorScene {
                         z += Constance.getSTEP();
                         ++k_z;
                     }
-                    if (k_z + 1 > Constance.getCOUNT() / 2) {
-                        z =Constance.getKEVEN();
-                        k_z = 0;
+                    if(iseven) {
+                        if (k_z + 1 > Constance.getCOUNT() / 2) {
+                            z = Constance.getKEVEN();
+                            k_z = 0;
+                        }
                     }
+                    else
+                        if(k_z>Constance.getCOUNT()/2) {
+                            z = 0;
+                            k_z=0;
+                        }
                 }
             }
             obj.setTranslateX(x);
@@ -85,58 +100,19 @@ public class MinorScene {
                 x += Constance.getSTEP();
                 ++k_x;
             }
-            if(k_x+1>Constance.getCOUNT()/2) {
-                x = Constance.getKEVEN();
-                k_x=0;
-            }
-        }
-    }
-
-
-    private void CreatContentOdd(){
-        root.getChildren().clear();
-        root.getChildren().add(camera);
-        double x=0,y=0,z=0;
-        for(int i=0; i<boxes.size(); ++i){
-            Container obj = boxes.get(i);
-
-            if(i!=0 && i%Constance.getCOUNT()==0){
-                if(y>0)
-                    y=-y;
-                else {
-                    y=-y;
-                    y += Constance.getSTEP();
-                }
-                if(y/Constance.getSTEP()>Constance.getCOUNT()/2)
-                    y=0;
-                if(i%(Constance.getCOUNT()*Constance.getCOUNT())==0){
-                    if(z>0)
-                        z=-z;
-                    else {
-                        z=-z;
-                        z += Constance.getSTEP();
-                    }
-                    if(z/Constance.getSTEP()>Constance.getCOUNT()/2)
-                        z=0;
+            if(iseven) {
+                if (k_x + 1 > Constance.getCOUNT() / 2) {
+                    x = Constance.getKEVEN();
+                    k_x = 0;
                 }
             }
-            obj.setTranslateX(x);
-            obj.setTranslateY(y);
-            obj.setTranslateZ(z);
-            obj.setX(x);
-            obj.setY(y);
-            obj.setZ(z);
-            root.getChildren().add(obj);
-            if(x>0)
-                x=-x;
-            else {
-                x=-x;
-                x += Constance.getSTEP();
-            }
-            if(x/Constance.getSTEP()>Constance.getCOUNT()/2)
-                x=0;
-        }
+            else
+                if(k_x>Constance.getCOUNT()/2) {
+                    x = 0;
+                    k_x=0;
+                }
 
+        }
     }
 
     private void AddAxis(){
@@ -217,10 +193,7 @@ public class MinorScene {
 
     public SubScene GetSubScene(){
         if(boxes.size()!=0) {
-            if (boxes.size() % 2 == 0)
-                CreatContentEven();
-            else
-                CreatContentOdd();
+            CreatContent(boxes.size()%2==0);
         }
         else {
             root.getChildren().clear();

@@ -28,7 +28,6 @@ public class Corps {
                     choses.remove(box);
                 }
             });
-            box.id = i;
             boxes.add(box);
         }
     }
@@ -36,7 +35,7 @@ public class Corps {
     public void setMaterial(Box box){
         box.setMaterial(Constance.getPhongMaterial());
     }
-    public ArrayList<Container> getBoxes(){
+    public  ArrayList<Container> getBoxes(){
         return boxes;
     }
     public void setCount(){
@@ -44,7 +43,6 @@ public class Corps {
         Generation();
     }
     public void SetColor(){
-        Generation();
         for(Box obj: boxes){
             if(obj.getMaterial()!=null) {
                 obj.setMaterial(Constance.getPhongMaterial());
@@ -57,5 +55,12 @@ public class Corps {
     }
     public void Clean(){
         choses.clear();
+    }
+    public void BeforRun(){
+        for(Container container: boxes){
+            container.setOnMousePressed(event -> {
+
+            });
+        }
     }
 }

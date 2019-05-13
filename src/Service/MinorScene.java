@@ -233,5 +233,11 @@ public class MinorScene {
         subScene.setFill(Constance.getPhongMaterialMinor().getDiffuseColor());
     }
 
+    public void Hide(){
+        subScene.setWidth(subScene.getWidth() + 250);
+    }
+    public void Show(){
+        subScene.setWidth(subScene.getWidth() - 250);
 
+    }
 }

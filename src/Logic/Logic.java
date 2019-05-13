@@ -4,6 +4,8 @@ import Constatnce.Constance;
 import Corps.Container;
 import Corps.Square;
 import javafx.application.Platform;
+import javafx.scene.control.Alert;
+
 import java.util.ArrayList;
 
 
@@ -24,19 +26,19 @@ public class Logic {
     private ArrayList<Integer> notzAxic = new ArrayList<>();
     private boolean finish = true;
 
-
     public Logic(){
     }
-    public void setup(ArrayList<Container> boxes){
+    public void Setup(ArrayList<Container> boxes){
+        array.clear();
         this.boxes = boxes;
         Initialize();
-        qwerty();
+        InitializeArray();
 
         thread = new Thread(() -> {
             Runnable updater = () -> Logic.this.Run(choses);
             while (!isEnd() & finish) {
                 try {
-                    Thread.sleep(500);
+                    Thread.sleep(Constance.SPEED);
                 } catch (InterruptedException ex) {
                 }
                 Platform.runLater(updater);
@@ -44,11 +46,19 @@ public class Logic {
                     Thread.sleep(50);
                 } catch (InterruptedException ex) {
                 }
-                AfterRun();
             }
+            Clean();
+            AfterRun();
+            Platform.runLater(this::Finish);
         });
     }
 
+    public void Finish(){
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setHeaderText("Finish");
+        alert.setContentText("Finish");
+        alert.showAndWait();
+    }
     private void Initialize(){
         for(int k=0; k<Constance.getCOUNT(); ++k) {
             Square[][] matrix = new Square[Constance.getCOUNT()][Constance.getCOUNT()];
@@ -107,7 +117,7 @@ public class Logic {
         return y;
     }
 
-    private void qwerty(){
+    private void InitializeArray(){
         int x=0, y=0,z=0;
         for(int i=0; i<boxes.size(); ++i) {
             Container obj = boxes.get(i);
@@ -131,13 +141,13 @@ public class Logic {
     public void setChoses(ArrayList<Container> choses){
         this.choses = choses;
     }
-    public void rr(){
+    public void StartLogic(){
+        choses1 = null;
         finish = true;
         if(choses.isEmpty())
             return;
         thread.setDaemon(true);
         thread.start();
-        System.out.println("1 = " + thread.isInterrupted());
     }
     private void Run(ArrayList<Container> choses){
 
@@ -170,7 +180,7 @@ public class Logic {
                             } else
                                 try {
                                     Container qwr = array.get(z + q)[x + w][y + e].getBox();
-                                    if (extra(z + q, x + w, y + e)) {
+                                    if (isAlive(z + q, x + w, y + e)) {
                                         xAxic.add(x + w);
                                         yAxic.add(y + e);
                                         zAxic.add(z + q);
@@ -206,7 +216,7 @@ public class Logic {
             notzAxic.clear();
     }
 
-    private boolean extra(int z, int x, int y) {
+    private boolean isAlive(int z, int x, int y) {
         int count=0;
         for (int q = -1; q < 2; ++q) {
             for (int w = -1; w < 2; ++w) {
@@ -221,7 +231,7 @@ public class Logic {
                 }
             }
         }
-        return count >= Constance.getCREATEMIN() && count <= Constance.getCREATEMAX();
+        return count >= Constance.CREATEMIN && count <= Constance.CREATEMAX;
     }
 
     private boolean isDie(int z, int x, int y){
@@ -230,6 +240,8 @@ public class Logic {
             for (int w = -1; w < 2; ++w) {
                 for (int e = -1; e < 2; ++e) {
                     try {
+                        if(q == 0 && w == 0 && e == 0)
+                            continue;
                         if(array.get(z+q)[x+w][y+e].getBox().getMaterial()!=null){
                             ++count;
                         }
@@ -238,7 +250,7 @@ public class Logic {
                 }
             }
         }
-        return count >= Constance.getALIVEMIN() && count <= Constance.getALIVEMAX();
+        return count >= Constance.ALIVEMIN && count <= Constance.ALIVEMAX;
     }
 
     private void AfterRun(){
@@ -247,7 +259,6 @@ public class Logic {
                 if(container.getMaterial()==null) {
                     container.setMaterial(Constance.getPhongMaterial());
                     choses.add(container);
-
                 }
                 else {
                     container.setMaterial(null);
@@ -259,30 +270,30 @@ public class Logic {
 
     private boolean isEnd(){
         if(choses.isEmpty()) {
-            System.out.println("1");
             return true;
         }
         if(choses1 == null) {
             choses1 = (ArrayList<Container>) choses.clone();
             return false;
         }
-        if(choses1.size()!=choses.size())
+        if(choses1.size()!=choses.size()) {
+            choses1 = (ArrayList<Container>)choses.clone();
             return false;
+        }
         else {
             for(int i=0; i<choses.size(); ++i) {
                 if(choses.get(i)!=choses1.get(i)) {
                     choses1 = (ArrayList<Container>)choses.clone();
-                    System.out.println("3");
                     return false;
                 }
             }
-            System.out.println("2");
             return true;
         }
     }
 
     public void Clean(){
         finish = false;
+        choses1 = null;
         xAxic.clear();
         yAxic.clear();
         zAxic.clear();

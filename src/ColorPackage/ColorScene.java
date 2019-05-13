@@ -27,19 +27,15 @@ public class ColorScene {
     }
 
     private void showChoiceDialog(){
-        ChoiceDialog<String> choiceDialog = new ChoiceDialog<>("фон1", "фон2", "фон3");
+        ChoiceDialog<String> choiceDialog = new ChoiceDialog<>("Фон за кубиком", "Фон панели", "Фон кубиков");
         choiceDialog.setTitle("Choser");
         choiceDialog.setHeaderText(null);
         Optional<String> answer = choiceDialog.showAndWait();
         answer.ifPresent(str->{
             string = str;
-            qq();
+            Initialize();
+            Show();
         });
-    }
-
-    private void qq(){
-        Initialize();
-        Show();
     }
 
     private void Initialize(){
@@ -54,13 +50,13 @@ public class ColorScene {
         button.setOnMousePressed(event1 -> {
             color = colorPicker.getValue();
             switch (string) {
-                case "фон1":
+                case "Фон за кубиком":
                     Constance.setPhongMaterialMain(color);
                     break;
-                case "фон2":
+                case "Фон панели":
                     Constance.setPhongMaterialMinor(color);
                     break;
-                case "фон3":
+                case "Фон кубиков":
                     Constance.setPhongMaterial(color);
                     break;
             }
@@ -84,9 +80,6 @@ public class ColorScene {
         stage.showAndWait();
     }
 
-    public Color getColor(){
-        return color;
-    }
     public String getName(){
         return string;
     }
